@@ -4,38 +4,46 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+
     [SerializeField]
     private Transform _playerTransform;
+
+    [SerializeField]
+    private float _movementForce;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.RightArrow))
+
+        Vector3 direction = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            _playerTransform.position += new Vector3(0.1f,0,0);
+            direction += new Vector3(0.1f, 0, 0);
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
-            _playerTransform.position += new Vector3(-0.1f, 0, 0);
+            direction += new Vector3(-0.1f, 0, 0);
         }
 
-        if (Input.GetKeyUp(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            _playerTransform.position += new Vector3(0, 0.1f, 0);
+            direction += new Vector3(0, 0.1f, 0);
         }
 
-        if (Input.GetKeyUp(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
-            _playerTransform.position += new Vector3(0, -0.1f, 0);
+            direction += new Vector3(0, -0.1f, 0);
         }
 
+        _playerTransform.position += direction * _movementForce * Time.deltaTime;
     }
-    // test de com pour git
 }
+
