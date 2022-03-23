@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-
     [SerializeField]
     private Rigidbody2D _playerRB;
-
     [SerializeField]
-    private float _movementForce = 100f;
-
+    private float _movementForce;
     [SerializeField]
-    private float _jumpForce = 100f;
+    private float _jumpForce;
+    [SerializeField]
+    private int _totalRemainingJump;
+    [SerializeField]
+    private int _coinCounter;
 
-    private bool _grounded;
+    private enum _playerState { isGrounded, isJumping };
+    private _playerState _currentState = _playerState.isGrounded;
+    private int _currentRemainingJump;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        _grounded = true;
+        _currentRemainingJump = _totalRemainingJump;
     }
 
     // Update is called once per frame
@@ -29,21 +34,11 @@ public class PlayerBehaviour : MonoBehaviour
         float horizontalMovement = 0;
         float verticalMovement = 0;
 
-        #region jump
-
-        if (Input.GetKeyDown(KeyCode.UpArrow) && _grounded == true)
+        if (Input.GetKeyDown(KeyCode.UpArrow) && _currentRemainingJump > 0)
         {
             verticalMovement += _jumpForce;
-            _grounded = false;
-        }
-
-        #endregion
-
-        #region input horizontaux
-
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            horizontalMovement -= _movementForce;
+            _currentRemainingJump--;
+            _currentState = _playerState.isJumping;
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
@@ -51,7 +46,10 @@ public class PlayerBehaviour : MonoBehaviour
             horizontalMovement += _movementForce;
         }
 
-        #endregion
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            horizontalMovement -= _movementForce;
+        }
 
         Vector2 newVelocity = new Vector2(horizontalMovement, _playerRB.velocity.y + verticalMovement);
 
@@ -60,12 +58,16 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("colision");
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Debug.Log("colision avec le sol");
-            _grounded = true;
+            _currentRemainingJump = _totalRemainingJump;
+            _currentState = _playerState.isGrounded;
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        _coinCounter++;
+        Debug.Log("pièce ramasser : " + _coinCounter);
+    }
 }
-
