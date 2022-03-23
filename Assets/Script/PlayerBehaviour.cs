@@ -6,10 +6,13 @@ public class PlayerBehaviour : MonoBehaviour
 {
 
     [SerializeField]
-    private Transform _playerTransform;
+    private Rigidbody2D _playerRB;
 
     [SerializeField]
-    private float _movementForce;
+    private float _movementForce = 100f;
+
+    [SerializeField]
+    private float _jumpForce = 100f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,31 +24,35 @@ public class PlayerBehaviour : MonoBehaviour
     void Update()
     {
 
-        Vector3 direction = Vector3.zero;
+        float horizontalMovement = 0;
+        float verticalMovement = 0;
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        #region jump
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            direction += new Vector3(0.1f, 0, 0);
+            verticalMovement += _jumpForce;
         }
+
+        #endregion
+
+        #region input horizontaux
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            direction += new Vector3(-0.1f, 0, 0);
+            horizontalMovement -= _movementForce;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            direction += new Vector3(0, 0.1f, 0);
+            horizontalMovement += _movementForce;
         }
 
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            direction += new Vector3(0, -0.1f, 0);
-        }
+        #endregion
 
-        
+        Vector2 newVelocity = new Vector2(horizontalMovement, _playerRB.velocity.y + verticalMovement);
 
-        _playerTransform.position += direction * _movementForce * Time.deltaTime;
+        _playerRB.velocity = newVelocity;
     }
 }
 
