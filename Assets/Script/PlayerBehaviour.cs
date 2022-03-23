@@ -43,11 +43,9 @@ public class PlayerBehaviour : MonoBehaviour
             direction += new Vector3(0, -0.1f, 0);
         }
 
-        direction.Normalize();
+        
 
         _playerTransform.position += direction * _movementForce * Time.deltaTime;
     }
-
-    //test git signature
 }
 
