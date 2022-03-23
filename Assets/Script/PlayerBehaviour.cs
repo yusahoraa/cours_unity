@@ -14,10 +14,12 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     private float _jumpForce = 100f;
 
+    private bool _grounded;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        _grounded = true;
     }
 
     // Update is called once per frame
@@ -29,9 +31,10 @@ public class PlayerBehaviour : MonoBehaviour
 
         #region jump
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) && _grounded == true)
         {
             verticalMovement += _jumpForce;
+            _grounded = false;
         }
 
         #endregion
@@ -53,6 +56,16 @@ public class PlayerBehaviour : MonoBehaviour
         Vector2 newVelocity = new Vector2(horizontalMovement, _playerRB.velocity.y + verticalMovement);
 
         _playerRB.velocity = newVelocity;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("colision");
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            Debug.Log("colision avec le sol");
+            _grounded = true;
+        }
     }
 }
 
