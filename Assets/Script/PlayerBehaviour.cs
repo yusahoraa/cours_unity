@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerBehaviour : MonoBehaviour
     private int _totalRemainingJump;
     [SerializeField]
     private int _coinCounter;
+    [SerializeField]
+    Text _TextScoreUi;
 
     private enum _playerState { isGrounded, isJumping };
     private _playerState _currentState = _playerState.isGrounded;
@@ -69,5 +72,6 @@ public class PlayerBehaviour : MonoBehaviour
     {
         _coinCounter++;
         Debug.Log("pièce ramasser : " + _coinCounter);
+        _TextScoreUi.text ="pièce ramasser : " + _coinCounter.ToString();
     }
 }
